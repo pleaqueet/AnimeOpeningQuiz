@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Угадай Аниме По Опенингу</string>
+    <string name="difficulty_easy">Сложность: easy</string>
+    <string name="difficulty_medium">Сложность: medium</string>
+    <string name="difficulty_hard">Сложность: hard</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="to_start_text">Нажмите, чтобы начать</string>
+    <string name="to_skip_text">Нажмите, чтобы пропустить</string>
+    <string name="answer_button">Ответить</string>
+    <string name="download">Скачать</string>
+    <string name="play">Играть</string>
+    <string name="help_button">Выбрать из 4 ответов</string>
+    <string name="enter_text_hint">Введите ответ</string>
+    <string name="choose_answer">Выберите ответ</string>
+    <string name="choose_pack">Выберите подборку опенингов</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="info">Info</string>
+    <string-array name="packs">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>

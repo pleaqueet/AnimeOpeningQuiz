@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "834028760552",
+    "firebase_url": "https://anime-opening-quiz-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "anime-opening-quiz",
+    "storage_bucket": "anime-opening-quiz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834028760552:android:3bddb4416080a77562c85d",
+        "android_client_info": {
+          "package_name": "com.example.animeopening"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834028760552-eu7t8gi46bdm9c83onja2t1jp853mlhv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS9H4e_Y1T8UqaiskC_XvuGmYnTronQTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "834028760552-eu7t8gi46bdm9c83onja2t1jp853mlhv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
