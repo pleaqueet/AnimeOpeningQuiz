@@ -9,6 +9,7 @@
     android:background="@drawable/ic_item_background">
 
     <ProgressBar
+        android:visibility="gone"
         android:id="@+id/progress_bar"
         android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
