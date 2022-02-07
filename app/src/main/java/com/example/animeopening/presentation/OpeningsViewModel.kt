@@ -19,4 +19,8 @@ class OpeningsViewModel
 
     val openingsLiveData: LiveData<List<Opening>> = openingRepository.getOpenings()
 
+    fun updateOpening(opening: Opening){
+        openingRepository.updateOpening(opening)
+    }
+
 }

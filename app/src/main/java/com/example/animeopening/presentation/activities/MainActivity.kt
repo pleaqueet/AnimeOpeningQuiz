@@ -2,10 +2,10 @@ package com.example.animeopening.presentation.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.animeopening.R
 import com.example.animeopening.databinding.ActivityMainBinding
 import com.example.animeopening.domain.models.Opening
 import com.example.animeopening.domain.models.Pack
@@ -17,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+
 
 const val STORAGE_URL = "gs://anime-opening-quiz.appspot.com"
 
@@ -36,30 +37,31 @@ class MainActivity : AppCompatActivity(), PackClickListener {
         storage = Firebase.storage(STORAGE_URL)
         openings = emptyList()
         packs = ArrayList()
-        for(pack in resources.getStringArray(R.array.packs).toList()) {
-            packs.add(Pack(pack.toInt(), false))
-        }
-        binding.packsRecView.layoutManager = LinearLayoutManager(this)
         viewModel.openingsLiveData.observe(this, {
             openings = it
+            for (pack in 1..(openings.size) / 10) {
+                packs.add(Pack(pack, isDownloading = false, isPlayed = false))
+            }
             binding.packsRecView.adapter = PacksAdapter(this, packs, openings, this)
         })
+        binding.packsRecView.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onPackClickListener(position: Int) {
-        when (position) {
-            0 -> checkPack(1, 0..9)
-            1 -> checkPack(2, 10..19)
-            2 -> checkPack(3, 20..29)
-            3 -> checkPack(4, 30..39)
-        }
+        checkPack(position + 1, position * 10..position * 10 + 9)
     }
 
     private fun checkPack(pack: Int, openingNumbers: IntRange) {
-        if (File(filesDir, openings[pack*10-5].mp3).exists()) {
-            startActivity(Intent(this, GameActivity::class.java))
+        if (File(filesDir, openings[pack * 10 - 5].mp3).exists()) {
+            val intent = Intent(this, GameActivity::class.java)
+            val ops = ArrayList<Opening>()
+            for (i in openingNumbers) {
+                ops.add(openings[i])
+            }
+            intent.putParcelableArrayListExtra("openings", ops as ArrayList<out Parcelable?>?)
+            startActivity(intent)
         } else {
-            packs[pack-1].isDownloading = true
+            packs[pack - 1].isDownloading = true
             binding.packsRecView.adapter = PacksAdapter(this, packs, openings, this)
             for (openingNumber in openingNumbers) {
                 downloadPack(pack, openingNumber)
@@ -74,13 +76,14 @@ class MainActivity : AppCompatActivity(), PackClickListener {
         val localFile = File(filesDir, openings[openingNumber].mp3)
         filesReference.getFile(localFile).addOnProgressListener { task ->
             if (task.bytesTransferred == task.totalByteCount) {
-                packs[packNumber-1].isDownloading = false
+                packs[packNumber - 1].isDownloading = false
                 binding.packsRecView.adapter = PacksAdapter(this, packs, openings, this)
             }
         }
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
     }
 }
-

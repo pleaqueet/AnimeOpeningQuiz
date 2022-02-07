@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface OpeningRepository {
     fun getOpenings(): LiveData<List<Opening>>
+    fun updateOpening(opening: Opening)
 }

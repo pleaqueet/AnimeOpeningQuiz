@@ -40,18 +40,18 @@ class PacksAdapter(
         }
         holder.progressBar.isVisible = packs[position].isDownloading
         if (position == 0) {
-            if (File(context.filesDir, openings[position+5].mp3).exists()) {
+            if (File(context.filesDir, openings[position + 5].mp3).exists()) {
                 holder.statusTextView.text = context.resources.getText(R.string.play)
             } else {
                 holder.statusTextView.text = context.resources.getText(R.string.download)
-            }}
-//        } else {
-//            if (File(context.filesDir, openings[position*10+5].mp3).exists()) {
-//                holder.statusTextView.text = context.resources.getText(R.string.play)
-//            } else {
-//                holder.statusTextView.text = context.resources.getText(R.string.download)
-//            }
-//        }
+            }
+        } else {
+            if (File(context.filesDir, openings[position * 10 + 5].mp3).exists()) {
+                holder.statusTextView.text = context.resources.getText(R.string.play)
+            } else {
+                holder.statusTextView.text = context.resources.getText(R.string.download)
+            }
+        }
     }
 
     override fun getItemCount(): Int {

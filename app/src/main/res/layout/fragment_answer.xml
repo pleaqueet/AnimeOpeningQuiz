@@ -7,10 +7,11 @@
     tools:context=".presentation.fragments.AnswerFragment">
 
     <Button
+        android:backgroundTint="@color/item_color"
         android:textColor="@color/white"
         android:id="@+id/answerButton3"
-        android:layout_width="178dp"
-        android:layout_height="102dp"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:fontFamily="@font/seoul"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,11 +22,12 @@
         app:layout_constraintVertical_bias="0.406" />
 
     <Button
+        android:backgroundTint="@color/item_color"
         android:textColor="@color/white"
         android:elevation="50dp"
         android:id="@+id/answerButton2"
-        android:layout_width="178dp"
-        android:layout_height="102dp"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:fontFamily="@font/seoul"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,10 +38,11 @@
         app:layout_constraintVertical_bias="0.585" />
 
     <Button
+        android:backgroundTint="@color/item_color"
         android:textColor="@color/white"
         android:id="@+id/answerButton1"
-        android:layout_width="178dp"
-        android:layout_height="102dp"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:fontFamily="@font/seoul"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,10 +53,11 @@
         app:layout_constraintVertical_bias="0.406" />
 
     <Button
+        android:backgroundTint="@color/item_color"
         android:textColor="@color/white"
         android:id="@+id/answerButton4"
-        android:layout_width="178dp"
-        android:layout_height="102dp"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:fontFamily="@font/seoul"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,6 +68,7 @@
         app:layout_constraintVertical_bias="0.585" />
 
     <TextView
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/seoul"

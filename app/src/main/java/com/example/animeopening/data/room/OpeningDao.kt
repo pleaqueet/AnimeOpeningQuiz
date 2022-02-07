@@ -12,4 +12,7 @@ interface OpeningDao {
 
     @Query("SELECT * FROM opening WHERE id = :id")
     suspend fun getOpeningById(id: Int): Opening?
+
+    @Update
+    fun updateOpening(opening: Opening)
 }

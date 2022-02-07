@@ -11,7 +11,7 @@ import com.example.animeopening.R
 import com.example.animeopening.databinding.FragmentStartGameBinding
 
 class StartGameFragment : Fragment() {
-    private var navController: NavController? = null
+    private lateinit var navController: NavController
     private lateinit var binding: FragmentStartGameBinding
 
     override fun onCreateView(
@@ -19,8 +19,13 @@ class StartGameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentStartGameBinding.inflate(inflater, container, false)
-        val prefs = activity?.getSharedPreferences("score",0)
-        binding.stats.text = "Ваш счёт: ${prefs?.getInt("score", 0)}\nУгадано опенингов: ${prefs?.getInt("countOpenings", 0)}\nНажмите, чтобы начать игру"
+        val prefs = activity?.getSharedPreferences("score", 0)
+        binding.stats.text = "Ваш счёт: ${
+            prefs?.getInt(
+                "score",
+                0
+            )
+        }\nУгадано опенингов: ${prefs?.getInt("countOpenings", 0)}\nНажмите, чтобы начать игру"
         return binding.root
     }
 
@@ -28,7 +33,7 @@ class StartGameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         binding.root.setOnClickListener {
-            navController?.navigate(R.id.action_startGameFragment_to_gameFragment)
+            navController.navigate(R.id.action_startGameFragment_to_gameFragment)
         }
     }
 }
