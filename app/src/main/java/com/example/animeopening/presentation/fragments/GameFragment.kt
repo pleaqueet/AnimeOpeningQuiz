@@ -104,13 +104,13 @@ class GameFragment : Fragment() {
         binding.clickText.isVisible = false
         Log.e("ADWAWDA", op.id.toString())
         Log.e("ADWAWDA", (allOpenings.indices - op.id).toString())
-        val opening1 = allOpenings[(allOpenings.indices - op.id).random()]
+        val opening1 = allOpenings[(allOpenings.indices - op.id+1).random()]
         Log.e("ADWAWDA", opening1.id.toString())
         Log.e("ADWAWDA", (allOpenings.indices - op.id - opening1.id).toString())
-        val opening2 = allOpenings[(allOpenings.indices - op.id - opening1.id).random()]
+        val opening2 = allOpenings[(allOpenings.indices - op.id - opening1.id+1).random()]
         Log.e("ADWAWDA", opening2.id.toString())
         Log.e("ADWAWDA", (allOpenings.indices - op.id - opening1.id - opening2.id).toString())
-        val opening3 = allOpenings[(allOpenings.indices - op.id - opening1.id - opening2.id).random()]
+        val opening3 = allOpenings[(allOpenings.indices - op.id - opening1.id - opening2.id+1).random()]
         Log.e("ADWAWDA", opening3.id.toString())
         val timer = Timer()
         var time = 15

@@ -13,6 +13,5 @@ data class Opening(
     val difficulty: Int,
     val opening: String,
     val mp3: String,
-    val url: String,
-    var listened: Boolean
+    val url: String
 ) : Parcelable
