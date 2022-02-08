@@ -74,7 +74,7 @@ class GameFragment : Fragment() {
                 1 -> {
                     binding.easyDiff.isVisible = true
                     binding.easyDiff.startAnimation(animationText)
-                    binding.pers.setBackgroundResource(R.drawable.ic_pers_easy)
+                    binding.pers.setBackgroundResource(R.drawable.ic_rori_easy)
                     binding.pers.startAnimation(animation)
                 }
                 2 -> {

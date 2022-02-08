@@ -10,6 +10,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="hard_diff">#D15151</color>
-    <color name="medium_diff">#E8F690</color>
-    <color name="easy_diff">#78DD8E</color>
+    <color name="medium_diff">#CDDC39</color>
+    <color name="easy_diff">#4CAF50</color>
 </resources>

@@ -84,7 +84,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
