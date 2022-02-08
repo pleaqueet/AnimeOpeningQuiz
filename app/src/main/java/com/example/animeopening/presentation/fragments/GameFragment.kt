@@ -127,7 +127,7 @@ class GameFragment : Fragment() {
                     "openingTitle3" to opening3.opening
                 )
                 activity?.runOnUiThread { binding.timer.text = time.toString() }
-                if (time == 14) {
+                if (time == 11) {
                     activity?.runOnUiThread {
                         binding.clickToSkip.isVisible = true
                         binding.clickToSkip.startAnimation(animationOp)
