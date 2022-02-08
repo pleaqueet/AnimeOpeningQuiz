@@ -23,6 +23,7 @@ import com.example.animeopening.domain.models.Pack
 import com.example.animeopening.presentation.OpeningsViewModel
 import com.example.animeopening.presentation.activities.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.Exception
 import java.util.*
 
 @AndroidEntryPoint
@@ -52,8 +53,6 @@ class GameFragment : Fragment() {
         viewModel.updatePack(pack)
 
         if (openings.size == 0) {
-            pack.isPlayed = true
-            viewModel.updatePack(pack)
             startActivity(Intent(requireActivity(), MainActivity::class.java))
         }
 
@@ -110,10 +109,9 @@ class GameFragment : Fragment() {
         binding.root.isClickable = false
         binding.clickText.startAnimation(animationEnd)
         binding.clickText.isVisible = false
-        val opening1 = allOpenings[(allOpenings.indices - op.id + 1).random()]
-        val opening2 = allOpenings[(allOpenings.indices - op.id - opening1.id + 1).random()]
-        val opening3 =
-            allOpenings[(allOpenings.indices - op.id - opening1.id - opening2.id + 1).random()]
+        val opening1 = allOpenings[(0..9).random()]
+        val opening2 = allOpenings[(10..19).random()]
+        val opening3 = allOpenings[(20..29).random()]
         val timer = Timer()
         var time = 15
         timer.scheduleAtFixedRate(object : TimerTask() {
@@ -127,7 +125,7 @@ class GameFragment : Fragment() {
                     "openingTitle3" to opening3.opening
                 )
                 activity?.runOnUiThread { binding.timer.text = time.toString() }
-                if (time == 11) {
+                if (time == 10) {
                     activity?.runOnUiThread {
                         binding.clickToSkip.isVisible = true
                         binding.clickToSkip.startAnimation(animationOp)
@@ -157,11 +155,5 @@ class GameFragment : Fragment() {
                 }
             }
         }, 1000, 1000)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mp.reset()
-        mp.stop()
     }
 }

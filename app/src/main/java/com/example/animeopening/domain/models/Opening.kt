@@ -12,6 +12,5 @@ data class Opening(
     @PrimaryKey val id: Int,
     val difficulty: Int,
     val opening: String,
-    val mp3: String,
-    val url: String
+    val mp3: String
 ) : Parcelable
