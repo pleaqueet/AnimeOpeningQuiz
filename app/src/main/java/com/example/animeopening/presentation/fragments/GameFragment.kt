@@ -111,9 +111,9 @@ class GameFragment : Fragment() {
         binding.clickText.startAnimation(animationEnd)
         binding.clickText.isVisible = false
 
-        val randomOpeningId1 = (allOpenings.indices - (op.id+1)).random()
-        val randomOpeningId2 = (allOpenings.indices - (op.id+1) - randomOpeningId1).random()
-        val randomOpeningId3 = (allOpenings.indices - (op.id+1) - randomOpeningId1 - randomOpeningId2).random()
+        val randomOpeningId1 = (allOpenings.indices - (op.id-1)).random()
+        val randomOpeningId2 = (allOpenings.indices - (op.id-1) - randomOpeningId1).random()
+        val randomOpeningId3 = (allOpenings.indices - (op.id-1) - randomOpeningId1 - randomOpeningId2).random()
 
         val timer = Timer()
         var time = 15
