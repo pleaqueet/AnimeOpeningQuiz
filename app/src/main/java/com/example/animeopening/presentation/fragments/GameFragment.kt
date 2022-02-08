@@ -23,8 +23,9 @@ import com.example.animeopening.domain.models.Pack
 import com.example.animeopening.presentation.OpeningsViewModel
 import com.example.animeopening.presentation.activities.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.Exception
+import java.security.SecureRandom
 import java.util.*
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class GameFragment : Fragment() {
@@ -109,9 +110,11 @@ class GameFragment : Fragment() {
         binding.root.isClickable = false
         binding.clickText.startAnimation(animationEnd)
         binding.clickText.isVisible = false
-        val opening1 = allOpenings[(0..9).random()]
-        val opening2 = allOpenings[(10..19).random()]
-        val opening3 = allOpenings[(20..29).random()]
+
+        val randomOpeningId1 = (allOpenings.indices - (op.id+1)).random()
+        val randomOpeningId2 = (allOpenings.indices - (op.id+1) - randomOpeningId1).random()
+        val randomOpeningId3 = (allOpenings.indices - (op.id+1) - randomOpeningId1 - randomOpeningId2).random()
+
         val timer = Timer()
         var time = 15
         timer.scheduleAtFixedRate(object : TimerTask() {
@@ -120,12 +123,12 @@ class GameFragment : Fragment() {
                 val bundle = bundleOf(
                     "answerOpeningTitle" to op.opening,
                     "openingDiff" to op.difficulty,
-                    "openingTitle1" to opening1.opening,
-                    "openingTitle2" to opening2.opening,
-                    "openingTitle3" to opening3.opening
+                    "openingTitle1" to allOpenings[randomOpeningId1].opening,
+                    "openingTitle2" to allOpenings[randomOpeningId2].opening,
+                    "openingTitle3" to allOpenings[randomOpeningId3].opening
                 )
                 activity?.runOnUiThread { binding.timer.text = time.toString() }
-                if (time == 10) {
+                if (time == 14) {
                     activity?.runOnUiThread {
                         binding.clickToSkip.isVisible = true
                         binding.clickToSkip.startAnimation(animationOp)
