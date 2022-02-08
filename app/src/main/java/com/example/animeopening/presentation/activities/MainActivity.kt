@@ -3,6 +3,7 @@ package com.example.animeopening.presentation.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,13 +38,18 @@ class MainActivity : AppCompatActivity(), PackClickListener {
         storage = Firebase.storage(STORAGE_URL)
         openings = emptyList()
         packs = ArrayList()
-        viewModel.openingsLiveData.observe(this, {
-            openings = it
-            for (pack in 1..(openings.size) / 10) {
-                packs.add(Pack(pack, isDownloading = false, isPlayed = false))
+
+        viewModel.packsLiveData.observe(this, { data ->
+            for(i in data) {
+                packs.add(i)
             }
+        })
+
+        viewModel.openingsLiveData.observe(this, { data ->
+            openings = data
             binding.packsRecView.adapter = PacksAdapter(this, packs, openings, this)
         })
+
         binding.packsRecView.layoutManager = LinearLayoutManager(this)
     }
 
@@ -58,6 +64,7 @@ class MainActivity : AppCompatActivity(), PackClickListener {
             for (i in openingNumbers) {
                 ops.add(openings[i])
             }
+            intent.putExtra("pack", pack)
             intent.putParcelableArrayListExtra("openings", ops as ArrayList<out Parcelable?>?)
             startActivity(intent)
         } else {
@@ -74,11 +81,9 @@ class MainActivity : AppCompatActivity(), PackClickListener {
         val filesReference =
             storage.getReferenceFromUrl("$STORAGE_URL/$packNumber/${openings[openingNumber].mp3}")
         val localFile = File(filesDir, openings[openingNumber].mp3)
-        filesReference.getFile(localFile).addOnProgressListener { task ->
-            if (task.bytesTransferred == task.totalByteCount) {
-                packs[packNumber - 1].isDownloading = false
-                binding.packsRecView.adapter = PacksAdapter(this, packs, openings, this)
-            }
+        filesReference.getFile(localFile).addOnCompleteListener {
+            packs[packNumber - 1].isDownloading = false
+            binding.packsRecView.adapter = PacksAdapter(this, packs, openings, this)
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.animeopening.presentation.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,11 +46,17 @@ class PacksAdapter(
             } else {
                 holder.statusTextView.text = context.resources.getText(R.string.download)
             }
+            if (packs[position].isPlayed) {
+                holder.statusTextView.text = context.resources.getText(R.string.play_again)
+            }
         } else {
             if (File(context.filesDir, openings[position * 10 + 5].mp3).exists()) {
                 holder.statusTextView.text = context.resources.getText(R.string.play)
             } else {
                 holder.statusTextView.text = context.resources.getText(R.string.download)
+            }
+            if (packs[position].isPlayed) {
+                holder.statusTextView.text = context.resources.getText(R.string.play_again)
             }
         }
     }

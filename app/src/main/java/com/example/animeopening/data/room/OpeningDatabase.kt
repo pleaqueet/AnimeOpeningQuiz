@@ -3,9 +3,10 @@ package com.example.animeopening.data.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.animeopening.domain.models.Opening
+import com.example.animeopening.domain.models.Pack
 
 @Database(
-    entities = [Opening::class],
+    entities = [Opening::class, Pack::class],
     version = 1,
     exportSchema = false
 )

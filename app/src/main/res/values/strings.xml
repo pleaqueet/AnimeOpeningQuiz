@@ -10,6 +10,7 @@
     <string name="answer_button">Ответить</string>
     <string name="download">Скачать</string>
     <string name="play">Играть</string>
+    <string name="play_again">Играть снова</string>
     <string name="help_button">Выбрать из 4 ответов</string>
     <string name="enter_text_hint">Введите ответ</string>
     <string name="choose_answer">Выберите ответ</string>

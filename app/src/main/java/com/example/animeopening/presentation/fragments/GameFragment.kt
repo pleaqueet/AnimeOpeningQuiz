@@ -19,6 +19,7 @@ import androidx.navigation.Navigation
 import com.example.animeopening.R
 import com.example.animeopening.databinding.FragmentGameBinding
 import com.example.animeopening.domain.models.Opening
+import com.example.animeopening.domain.models.Pack
 import com.example.animeopening.presentation.OpeningsViewModel
 import com.example.animeopening.presentation.activities.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +31,8 @@ class GameFragment : Fragment() {
     private lateinit var binding: FragmentGameBinding
     private lateinit var openings: ArrayList<Opening>
     private lateinit var opening: Opening
+    private lateinit var pack: Pack
+    private lateinit var mp: MediaPlayer
     private var allOpenings = listOf<Opening>()
     private lateinit var navController: NavController
 
@@ -42,10 +45,15 @@ class GameFragment : Fragment() {
         val animationText: Animation = AnimationUtils.loadAnimation(context, R.anim.text_opening)
         val animation: Animation = AnimationUtils.loadAnimation(context, R.anim.slide_up)
 
+        pack = Pack(requireActivity().intent.getIntExtra("pack", 1), false, isPlayed = false)
         openings =
             requireActivity().intent.getParcelableArrayListExtra<Opening>("openings") as ArrayList<Opening>
+        pack.isPlayed = true
+        viewModel.updatePack(pack)
 
         if (openings.size == 0) {
+            pack.isPlayed = true
+            viewModel.updatePack(pack)
             startActivity(Intent(requireActivity(), MainActivity::class.java))
         }
 
@@ -97,21 +105,15 @@ class GameFragment : Fragment() {
         val animationOp: Animation = AnimationUtils.loadAnimation(context, R.anim.text_opening)
         val animationEnd: Animation = AnimationUtils.loadAnimation(context, R.anim.text_ending)
         val opUri = Uri.parse("${requireActivity().filesDir}/${op.mp3}")
-        val mp = MediaPlayer.create(context, opUri)
+        mp = MediaPlayer.create(context, opUri)
         mp.start()
         binding.root.isClickable = false
         binding.clickText.startAnimation(animationEnd)
         binding.clickText.isVisible = false
-        Log.e("ADWAWDA", op.id.toString())
-        Log.e("ADWAWDA", (allOpenings.indices - op.id).toString())
-        val opening1 = allOpenings[(allOpenings.indices - op.id+1).random()]
-        Log.e("ADWAWDA", opening1.id.toString())
-        Log.e("ADWAWDA", (allOpenings.indices - op.id - opening1.id).toString())
-        val opening2 = allOpenings[(allOpenings.indices - op.id - opening1.id+1).random()]
-        Log.e("ADWAWDA", opening2.id.toString())
-        Log.e("ADWAWDA", (allOpenings.indices - op.id - opening1.id - opening2.id).toString())
-        val opening3 = allOpenings[(allOpenings.indices - op.id - opening1.id - opening2.id+1).random()]
-        Log.e("ADWAWDA", opening3.id.toString())
+        val opening1 = allOpenings[(allOpenings.indices - op.id + 1).random()]
+        val opening2 = allOpenings[(allOpenings.indices - op.id - opening1.id + 1).random()]
+        val opening3 =
+            allOpenings[(allOpenings.indices - op.id - opening1.id - opening2.id + 1).random()]
         val timer = Timer()
         var time = 15
         timer.scheduleAtFixedRate(object : TimerTask() {
@@ -155,5 +157,11 @@ class GameFragment : Fragment() {
                 }
             }
         }, 1000, 1000)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mp.reset()
+        mp.stop()
     }
 }
