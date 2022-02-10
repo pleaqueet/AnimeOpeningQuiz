@@ -1,5 +1,6 @@
 package com.example.animeopening.presentation.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,13 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.animeopening.R
 import com.example.animeopening.databinding.FragmentResultBinding
+import com.example.animeopening.presentation.activities.MainActivity
+import com.example.animeopening.util.Animator
 
 class ResultFragment : Fragment() {
     private lateinit var binding: FragmentResultBinding
     private lateinit var navController: NavController
+    private lateinit var animator: Animator
     var countOpenings = 0
     var score = 0
 
@@ -26,10 +30,12 @@ class ResultFragment : Fragment() {
         val prefs = activity?.getSharedPreferences("score", 0)
         score = prefs?.getInt("score", 0)!!
         countOpenings = prefs.getInt("countOpenings", 0)
+        animator = Animator(requireContext())
 
         val result = arguments?.getInt("result")
         val title = arguments?.getString("title")
         val diff = arguments?.getInt("diff")
+        val isEndPack = arguments?.getBoolean("isEndPack")
         val animation: Animation = AnimationUtils.loadAnimation(context, R.anim.text_opening)
         if (result == 1) {
             score += diff!!
@@ -73,7 +79,12 @@ class ResultFragment : Fragment() {
             binding.resultText.startAnimation(animation)
             binding.root.isClickable = true
             binding.root.setOnClickListener {
-                navController.navigate(R.id.action_resultFragment_to_gameFragment)
+                if (isEndPack == true) {
+                    startActivity(Intent(requireActivity(), MainActivity::class.java))
+                    
+                } else {
+                    navController.navigate(R.id.action_resultFragment_to_gameFragment)
+                }
             }
         }
 

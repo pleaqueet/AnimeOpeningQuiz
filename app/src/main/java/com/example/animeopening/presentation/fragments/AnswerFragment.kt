@@ -15,6 +15,7 @@ class AnswerFragment : Fragment() {
     private var navController: NavController? = null
     private lateinit var binding: FragmentAnswerBinding
     lateinit var answerOpeningTitle: String
+    var isEndPack: Boolean = false
     var diff = 0
 
     override fun onCreateView(
@@ -28,6 +29,7 @@ class AnswerFragment : Fragment() {
         val OpeningTitle1 = arguments?.getString("openingTitle1").toString()
         val OpeningTitle2 = arguments?.getString("openingTitle2").toString()
         val OpeningTitle3 = arguments?.getString("openingTitle3").toString()
+        isEndPack = arguments?.getBoolean("isEndPack")!!
 
         val answer = (1..4).random()
         when (answer) {
@@ -95,7 +97,7 @@ class AnswerFragment : Fragment() {
     }
 
     private fun onWin() {
-        val bundle = bundleOf("result" to 1, "diff" to diff)
+        val bundle = bundleOf("result" to 1, "diff" to diff, "isEndPack" to isEndPack)
         try {
             navController?.navigate(R.id.action_answerFragment_to_resultFragment, bundle)
         } catch (e: IllegalArgumentException) {
@@ -104,7 +106,7 @@ class AnswerFragment : Fragment() {
     }
 
     private fun onLose() {
-        val bundle = bundleOf("result" to 0, "title" to answerOpeningTitle)
+        val bundle = bundleOf("result" to 0, "title" to answerOpeningTitle, "isEndPack" to isEndPack)
         try {
             navController?.navigate(R.id.action_answerFragment_to_resultFragment, bundle)
         } catch (e: IllegalArgumentException) {

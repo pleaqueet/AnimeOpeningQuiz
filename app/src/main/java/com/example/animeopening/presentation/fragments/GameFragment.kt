@@ -1,15 +1,11 @@
 package com.example.animeopening.presentation.fragments
 
-import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,76 +17,71 @@ import com.example.animeopening.databinding.FragmentGameBinding
 import com.example.animeopening.domain.models.Opening
 import com.example.animeopening.domain.models.Pack
 import com.example.animeopening.presentation.OpeningsViewModel
-import com.example.animeopening.presentation.activities.MainActivity
+import com.example.animeopening.util.Animator
 import dagger.hilt.android.AndroidEntryPoint
-import java.security.SecureRandom
 import java.util.*
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class GameFragment : Fragment() {
     private val viewModel by viewModels<OpeningsViewModel>()
     private lateinit var binding: FragmentGameBinding
-    private lateinit var openings: ArrayList<Opening>
-    private lateinit var opening: Opening
-    private lateinit var pack: Pack
-    private lateinit var mp: MediaPlayer
+    private lateinit var openingsOfCurrentPack: ArrayList<Opening>
+    private lateinit var currentOpening: Opening
+    private lateinit var currentPack: Pack
+    private lateinit var mediaPlayer: MediaPlayer
     private var allOpenings = listOf<Opening>()
     private lateinit var navController: NavController
+    private lateinit var animator: Animator
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentGameBinding.inflate(inflater, container, false)
-
-        val animationText: Animation = AnimationUtils.loadAnimation(context, R.anim.text_opening)
-        val animation: Animation = AnimationUtils.loadAnimation(context, R.anim.slide_up)
-
-        pack = Pack(requireActivity().intent.getIntExtra("pack", 1), false, isPlayed = false)
-        openings =
+        animator = Animator(requireContext())
+        currentPack = Pack(
+            requireActivity().intent.getIntExtra("pack", 1),
+            isDownloading = false,
+            isPlayed = false
+        )
+        openingsOfCurrentPack =
             requireActivity().intent.getParcelableArrayListExtra<Opening>("openings") as ArrayList<Opening>
-        pack.isPlayed = true
-        viewModel.updatePack(pack)
-
-        if (openings.size == 0) {
-            startActivity(Intent(requireActivity(), MainActivity::class.java))
-        }
+        currentPack.isPlayed = true
+        viewModel.updatePack(currentPack)
 
         viewModel.openingsLiveData.observe(viewLifecycleOwner,
-            {
-                allOpenings = it
+            { data ->
+                allOpenings = data
             })
 
-        binding.clickText.startAnimation(animationText)
+        binding.clickText.startAnimation(animator.animationTextOpening)
 
         binding.clickToSkip.isVisible = false
         binding.root.setOnClickListener {
-            val randomOpeningId = (0 until openings.size).random()
-            opening = openings[randomOpeningId]
-            openings.remove(opening)
+            currentOpening = openingsOfCurrentPack.random()
+            openingsOfCurrentPack.remove(currentOpening)
 
-            when (opening.difficulty) {
+            when (currentOpening.difficulty) {
                 1 -> {
                     binding.easyDiff.isVisible = true
-                    binding.easyDiff.startAnimation(animationText)
+                    binding.easyDiff.startAnimation(animator.animationTextOpening)
                     binding.pers.setBackgroundResource(R.drawable.ic_rori_easy)
-                    binding.pers.startAnimation(animation)
+                    binding.pers.startAnimation(animator.animationSlideUp)
                 }
                 2 -> {
                     binding.mediumDiff.isVisible = true
-                    binding.mediumDiff.startAnimation(animationText)
+                    binding.mediumDiff.startAnimation(animator.animationTextOpening)
                     binding.pers.setBackgroundResource(R.drawable.ic_pers_medium)
-                    binding.pers.startAnimation(animation)
+                    binding.pers.startAnimation(animator.animationSlideUp)
                 }
                 3 -> {
                     binding.hardDiff.isVisible = true
-                    binding.hardDiff.startAnimation(animationText)
+                    binding.hardDiff.startAnimation(animator.animationTextOpening)
                     binding.pers.setBackgroundResource(R.drawable.ic_pers_hard)
-                    binding.pers.startAnimation(animation)
+                    binding.pers.startAnimation(animator.animationSlideUp)
                 }
             }
-            playOpening(opening)
+            playOpening(currentOpening)
         }
 
         return binding.root
@@ -101,37 +92,25 @@ class GameFragment : Fragment() {
         navController = Navigation.findNavController(view)
     }
 
-    private fun playOpening(op: Opening) {
-        val animationOp: Animation = AnimationUtils.loadAnimation(context, R.anim.text_opening)
-        val animationEnd: Animation = AnimationUtils.loadAnimation(context, R.anim.text_ending)
-        val opUri = Uri.parse("${requireActivity().filesDir}/${op.mp3}")
-        mp = MediaPlayer.create(context, opUri)
-        mp.start()
+    private fun playOpening(playingOpening: Opening) {
+        val opUri = Uri.parse("${requireActivity().filesDir}/${playingOpening.mp3}")
+        mediaPlayer = MediaPlayer.create(context, opUri)
+        mediaPlayer.start()
         binding.root.isClickable = false
-        binding.clickText.startAnimation(animationEnd)
+        binding.clickText.startAnimation(animator.animationTextEnd)
         binding.clickText.isVisible = false
-
-        val randomOpeningId1 = (allOpenings.indices - (op.id-1)).random()
-        val randomOpeningId2 = (allOpenings.indices - (op.id-1) - randomOpeningId1).random()
-        val randomOpeningId3 = (allOpenings.indices - (op.id-1) - randomOpeningId1 - randomOpeningId2).random()
 
         val timer = Timer()
         var time = 15
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 time--
-                val bundle = bundleOf(
-                    "answerOpeningTitle" to op.opening,
-                    "openingDiff" to op.difficulty,
-                    "openingTitle1" to allOpenings[randomOpeningId1].opening,
-                    "openingTitle2" to allOpenings[randomOpeningId2].opening,
-                    "openingTitle3" to allOpenings[randomOpeningId3].opening
-                )
-                activity?.runOnUiThread { binding.timer.text = time.toString() }
+                val bundle = bundleOfOpening(playingOpening)
+                requireActivity().runOnUiThread { binding.timer.text = time.toString() }
                 if (time == 14) {
-                    activity?.runOnUiThread {
+                    requireActivity().runOnUiThread {
                         binding.clickToSkip.isVisible = true
-                        binding.clickToSkip.startAnimation(animationOp)
+                        binding.clickToSkip.startAnimation(animator.animationTextOpening)
                         binding.root.isClickable = true
                         binding.root.setOnClickListener {
                             cancel()
@@ -139,24 +118,39 @@ class GameFragment : Fragment() {
                                 R.id.action_gameFragment_to_answerFragment,
                                 bundle
                             )
-                            mp.reset()
-                            mp.stop()
+                            mediaPlayer.reset()
+                            mediaPlayer.stop()
                             binding.root.isClickable = false
                         }
                     }
                 }
                 if (time == 0) {
                     cancel()
-                    activity?.runOnUiThread {
+                    requireActivity().runOnUiThread {
                         navController.navigate(
                             R.id.action_gameFragment_to_answerFragment,
                             bundle
                         )
                     }
-                    mp.reset()
-                    mp.stop()
+                    mediaPlayer.reset()
+                    mediaPlayer.stop()
                 }
             }
         }, 1000, 1000)
+    }
+
+    private fun bundleOfOpening(opening: Opening): Bundle {
+        val randomOpeningId1 = (allOpenings.indices - (opening.id - 1)).random()
+        val randomOpeningId2 = (allOpenings.indices - (opening.id - 1) - randomOpeningId1).random()
+        val randomOpeningId3 =
+            (allOpenings.indices - (opening.id - 1) - randomOpeningId1 - randomOpeningId2).random()
+        return bundleOf(
+            "answerOpeningTitle" to opening.opening,
+            "openingDiff" to opening.difficulty,
+            "openingTitle1" to allOpenings[randomOpeningId1].opening,
+            "openingTitle2" to allOpenings[randomOpeningId2].opening,
+            "openingTitle3" to allOpenings[randomOpeningId3].opening,
+            "isEndPack" to openingsOfCurrentPack.isEmpty()
+        )
     }
 }
